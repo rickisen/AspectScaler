@@ -9,9 +9,11 @@ AspectScaler::AspectScaler(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->EditWidth, SIGNAL(textChanged(QString)), ui->CalculatedWidth, SLOT(setText(QString)));
     connect(ui->EditWidth, SIGNAL(textEdited(QString)), this, SLOT(NewW(QString)));
+    connect(ui->EditWidth, SIGNAL(textEdited(QString)), this, SLOT(on_Aspect_Ratio_Update()));
 
     connect(ui->EditHeight, SIGNAL(textChanged(QString)), ui->CalculatedHeight, SLOT(setText(QString)));
     connect(ui->EditHeight, SIGNAL(textEdited(QString)), this, SLOT(NewH(QString)));
+    connect(ui->EditHeight, SIGNAL(textEdited(QString)), this, SLOT(on_Aspect_Ratio_Update()));
 
     connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(updateAspectScale(int)));
 }
@@ -97,3 +99,31 @@ void AspectScaler::on_ButtonPrev_clicked()
             break;
     }
 }
+
+void AspectScaler::on_Aspect_Ratio_Update()
+{
+    // slot  to update the little aspect ratio indicator at the bottom
+    double height, width ;
+
+    for (int i = 1 ; i != ui->horizontalSlider->maximum() ; i++)
+    {
+        if (ui->EditHeight->text().toInt() < ui->EditWidth->text().toInt() ) {
+        height =  i / ( ui->EditWidth->text().toDouble() / ui->EditHeight->text().toDouble() ) ;
+        width = i ;
+        }else if (ui->EditHeight->text().toInt() > ui->EditWidth->text().toInt()) {
+        width = i / ( ui->EditHeight->text().toDouble() / ui->EditWidth->text().toDouble() ) ;
+        height = i ;
+        }else if (ui->EditHeight->text().toInt() == ui->EditWidth->text().toInt()) {
+        width = i ;
+        height = i ;
+        }
+
+        if ( height == static_cast<int>(height) && width == static_cast<int>(width) )
+            break;
+    }
+
+
+    ui->LabelAspectRatio->setText(QString::number(width) + ":" + QString::number(height));
+
+}
+

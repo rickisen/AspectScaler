@@ -19,10 +19,9 @@ private slots:
     void NewW(QString) ;
     void NewH(QString) ;
     void updateAspectScale(int);
-
     void on_ButtonNext_clicked();
-
     void on_ButtonPrev_clicked();
+    void on_Aspect_Ratio_Update();
 
 private:
     Ui::AspectScaler *ui;
